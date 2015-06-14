@@ -84,7 +84,15 @@ Binary.prototype.add = function(b){
   return sum;
 };
 
-Binary.prototype.complement1 = function(){
+Binary.prototype.complement = function(method){
+  if(method === 1){
+    return this._compMethLong();
+  }else{
+    return this._compMethShort();
+  }
+};
+
+Binary.prototype._compMethLong = function(){
   var comp='', flip=false, that=this;
 
   this.each(function(c,i){
@@ -101,7 +109,13 @@ Binary.prototype.complement1 = function(){
   return comp;
 };
 
-Binary.prototype.complement2 = function(){
+Binary.prototype._compMethShort = function(){
   return (new Binary(this.flip())).add('1');
 };
+
+
+// testing
+console.log(new Binary('10100'));
+console.log(new Binary('10100').complement());
+console.log(new Binary('10100').complement(1));
 
