@@ -45,6 +45,7 @@ Hash.prototype.remove_key = function(key) {
 
 function jenkinsOneAtATimeHash(key){
   var hash, i;
+  var key = key.toString();
   hash = i = 0;
   for (; i < key.length; i++) {
     hash += key[i].charCodeAt();
