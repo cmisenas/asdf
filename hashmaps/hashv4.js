@@ -6,37 +6,53 @@ function Hash() {
   this.data = new Array(INITIAL_SIZE);
 }
 
-Hash.prototype.add_key_value_pair = function(k, v) {
+Hash.prototype.add_key_value_pair = function(key, val) {
   // handle full array size
   // handle index occupied
-  var index = hash_key(key) % INITIAL_SIZE;
-  while((this.data[index] !== TOMBSTONE || this.data[index] !== undefined) && index < INITIAL_SIZE) {
+  var index = jenkinsOneAtATimeHash(key) % INITIAL_SIZE;
+
+  while((this.data[index] !== TOMBSTONE && this.data[index] !== undefined) && index < INITIAL_SIZE) {
     index++;
   }
   // reallocate array if index is beyond INITIAL_SIZE
   this.data[index] = key + ":" + val;
 };
 
-Hash.prototype.get_value = function(k) {
-  var index = hash_key(key) % INITIAL_SIZE;
+Hash.prototype.get_value = function(key) {
+  var index = jenkinsOneAtATimeHash(key) % INITIAL_SIZE;
   var arr;
+
   // we are assuming open addressing at this point
-  // TODO: collision detection handling
+  if (this.data[index] == undefined || this.data[index] === TOMBSTONE) return;
+
   while (index < INITIAL_SIZE) {
     arr = this.data[index].split(':');
-    if (arr[0] === k) {
+    // JavaScript does the same thing with object keys
+    // it type coerces it into a string so that if you have:
+    // var x = {};
+    // x[5] and x['5'] is the same
+    if (arr[0].toString() === key.toString()) {
       return arr[1];
     }
     index++;
   }
 };
 
-Hash.prototype.remove_key = function(k) {
-  var index = hash_key(key) % INITIAL_SIZE;
+Hash.prototype.remove_key = function(key) {
+  var index = jenkinsOneAtATimeHash(key) % INITIAL_SIZE;
   this.data[index] = TOMBSTONE; //hardehar
 };
 
-function hash_key(key) {
-  // implement here
-};
-
+function jenkinsOneAtATimeHash(key){
+  var hash, i;
+  hash = i = 0;
+  for (; i < key.length; i++) {
+    hash += key[i].charCodeAt();
+    hash += (hash << 10);
+    hash ^= (hash >> 6);
+  }
+  hash += (hash << 3);
+  hash ^= (hash >> 11);
+  hash += (hash << 15);
+  return Math.abs(hash);
+}
