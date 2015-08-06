@@ -10,12 +10,15 @@ Hash.prototype.add_key_value_pair = function(key, val) {
   // handle full array size
   // handle index occupied
   var index = jenkinsOneAtATimeHash(key) % INITIAL_SIZE;
+  var delim;
 
   while((this.data[index] !== TOMBSTONE && this.data[index] !== undefined) && index < INITIAL_SIZE) {
     index++;
   }
-  // reallocate array if index is beyond INITIAL_SIZE
-  this.data[index] = key + ":" + val;
+  // TODO: reallocate array if index is beyond INITIAL_SIZE
+  console.log(index);
+  delim = typeof val === 'number' ? ":num:" : ":";
+  this.data[index] =  key + delim + val;
 };
 
 Hash.prototype.get_value = function(key) {
@@ -32,7 +35,11 @@ Hash.prototype.get_value = function(key) {
     // var x = {};
     // x[5] and x['5'] is the same
     if (arr[0].toString() === key.toString()) {
-      return arr[1];
+      if (arr.length > 2) {
+        return parseFloat(arr[2], 10);
+      } else {
+        return arr[1];
+      }
     }
     index++;
   }

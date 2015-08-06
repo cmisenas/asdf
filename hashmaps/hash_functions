@@ -1,0 +1,6 @@
+* Knuth multiplicative hash
+Jenkins
+  * one at a time function
+  * lookup2
+  * lookup3
+  * SpookyHash
