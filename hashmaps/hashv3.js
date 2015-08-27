@@ -4,19 +4,34 @@ function Hash() {
 }
 
 Hash.prototype.add_key_value_pair = function(k, v) {
-  var pos = binary_search(k, this.data);
-  this.data[pos] = [k, v];
+  var key = k.toString();
+  var index;
+  if (!!this.data.length) {
+    index = binary_search(key, this.data);
+    if (this.data[index] && this.data[index][0] === key) {
+      this.data[index][1] = v;
+    } else {
+      this.data.splice(index, 0, [key, v]);
+    }
+  } else {
+    this.data.push([key, v]);
+  }
 };
 
 Hash.prototype.get_value = function(k) {
-  var pos = binary_search(k, this.data);
-  return this.data[pos];
+  var key = k.toString();
+  var index = binary_search(key, this.data);
+  if (index < 0 || index >= this.data.length || this.data[index][0] !== key) {
+    return;
+  }
+  return this.data[index][1];
 };
 
 Hash.prototype.remove_key = function(k) {
-  var pos = binary_search(k, this.data);
-  // does splicing affect time?
-  this.data.splice(i, 1);
+  var index = binary_search(k, this.data);
+  if (index > -1) {
+    this.data.splice(index, 1);
+  }
 };
 
 function binary_search(val, arr) {
@@ -34,11 +49,6 @@ function binary_search(val, arr) {
       return mid;
     }
   }
-  // not found or
-  // return low;
+  return low;
 }
 
-// don't think this is needed.
-// as you add elements, always make sure it's the sorted way
-function sort() {
-}

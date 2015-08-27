@@ -12,11 +12,13 @@ Hash.prototype.add_key_value_pair = function(key, val) {
   var index = jenkinsOneAtATimeHash(key) % INITIAL_SIZE;
   var delim;
 
-  while((this.data[index] !== TOMBSTONE && this.data[index] !== undefined) && index < INITIAL_SIZE) {
+  while((this.data[index] !== TOMBSTONE &&
+        (this.data[index] !== undefined &&
+         this.data[index].indexOf(key) < 0)) &&
+         index < INITIAL_SIZE) {
     index++;
   }
   // TODO: reallocate array if index is beyond INITIAL_SIZE
-  console.log(index);
   delim = typeof val === 'number' ? ":num:" : ":";
   this.data[index] =  key + delim + val;
 };
@@ -64,3 +66,4 @@ function jenkinsOneAtATimeHash(key){
   hash += (hash << 15);
   return Math.abs(hash);
 }
+
