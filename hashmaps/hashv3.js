@@ -7,15 +7,11 @@
   Hash.prototype.add_key_value_pair = function(k, v) {
     var key = k.toString();
     var index;
-    if (!!this.data.length) {
-      index = binary_search(key, this.data);
-      if (this.data[index] && this.data[index][0] === key) {
-        this.data[index][1] = v;
-      } else {
-        this.data.splice(index, 0, [key, v]);
-      }
+    index = binary_search(key, this.data);
+    if (this.data[index] && this.data[index][0] === key) {
+      this.data[index][1] = v;
     } else {
-      this.data.push([key, v]);
+      this.data.splice(index, 0, [key, v]);
     }
   };
 
